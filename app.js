@@ -37,7 +37,7 @@ function identifyName(infos){
 
 function downloadVideo(callback, infos){
 	var videoDownload = ytdl.downloadFromInfo(infos.youtubeInfos);
-	videoDownload.pipe(fs.createWriteStream(infos.sanitizedTitle + ".mp4"));
+	videoDownload.pipe(fs.createWriteStream('temp/' + infos.sanitizedTitle + ".mp4"));
 
 	videoDownload.on('end', ()=>{
 		callback(infos.sanitizedTitle);
