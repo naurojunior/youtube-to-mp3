@@ -4,14 +4,11 @@ const extractAudio = require('ffmpeg-extract-audio')
 const readline = require('readline');
 
 filename = process.argv[2];
-filename = (process.argv[2]) ? process.argv[2] : "links.txt";
-
-var filename = "links.txt";
 downloadMp3FromFile(filename);
 
 
 function downloadMp3FromFile(file = 'links.txt'){
-	readFile(lineRead);
+	readFile(lineRead, file);
 }
 
 function lineRead(url){
@@ -41,9 +38,9 @@ function downloadVideo(infos){
 	});
 }
 
-function readFile(callback){
+function readFile(callback, file){
 	let lineReader = readline.createInterface({
-	  input: require('fs').createReadStream('links.txt')
+	  input: require('fs').createReadStream(file)
 	});
 
 	return new Promise( function(resolve , reject ){
