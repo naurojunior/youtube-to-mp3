@@ -19,28 +19,26 @@ function lineRead(url){
 	ytdl.getInfo(url)
 		.then(identifyName)
 		.then(sanitizedName)
-		.then(downloadVideo.bind(null, finishedDownload));
+		.then(downloadVideo)
+		.then(convertMp4ToMp3);
 }
 
 function sanitizedName(infos){
-	return new Promise( function(resolve , reject ){
-		infos.sanitizedTitle = infos.sanitizedTitle.replace(/[^\w\s]/gi, '');
-		resolve(infos);
-	}); 
+	infos.sanitizedTitle = infos.sanitizedTitle.replace(/[^\w\s]/gi, '');
+	return infos;
 }
 
 function identifyName(infos){
-	return new Promise( function(resolve , reject ){
-		resolve({ youtubeInfos: infos, sanitizedTitle: infos.player_response.videoDetails.title });
-	}); 
+	return { youtubeInfos: infos, sanitizedTitle: infos.player_response.videoDetails.title };
 }
 
-function downloadVideo(callback, infos){
-	var videoDownload = ytdl.downloadFromInfo(infos.youtubeInfos);
-	videoDownload.pipe(fs.createWriteStream('temp/' + infos.sanitizedTitle + ".mp4"));
-
-	videoDownload.on('end', ()=>{
-		callback(infos.sanitizedTitle);
+function downloadVideo(infos){
+	return new Promise( function(resolve , reject ){
+		var videoDownload = ytdl.downloadFromInfo(infos.youtubeInfos);
+		videoDownload.pipe(fs.createWriteStream('temp/' + infos.sanitizedTitle + ".mp4"));
+		videoDownload.on('end', ()=>{
+			resolve(infos)
+		});
 	});
 }
 
@@ -56,11 +54,11 @@ function readFile(callback){
 	});
 }
 
-function convertMp4ToMp3(sanitizedTitle){
-	extractAudio({
-		  input: 'temp/' + sanitizedTitle + '.mp4',
-		  output: "downloads/" + sanitizedTitle + ".mp3"
+function convertMp4ToMp3(infos){
+	return extractAudio({
+		  input: "temp/" + infos.sanitizedTitle + ".mp4",
+		  output: "downloads/" + infos.sanitizedTitle + ".mp3"
   	}).then(() => {
-  		fs.unlink(sanitizedTitle + '.mp4', () => {});
+  		fs.unlink("temp/" + infos.sanitizedTitle + '.mp4', () => {});
   	});
 }
