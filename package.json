@@ -1,0 +1,23 @@
+{
+  "name": "youtube-to-mp3",
+  "version": "1.0.0",
+  "description": "Download de videos e conversão para mp3 em nodeJs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naurojunior/youtube-to-mp3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/naurojunior/youtube-to-mp3/issues"
+  },
+  "homepage": "https://github.com/naurojunior/youtube-to-mp3#readme",
+  "dependencies": {
+    "ffmpeg-extract-audio": "^1.0.2",
+    "ytdl-core": "^0.29.1"
+  }
+}
