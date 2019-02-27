@@ -58,7 +58,7 @@ function readFile(callback){
 
 function convertMp4ToMp3(sanitizedTitle){
 	extractAudio({
-		  input: sanitizedTitle + '.mp4',
+		  input: 'temp/' + sanitizedTitle + '.mp4',
 		  output: "downloads/" + sanitizedTitle + ".mp3"
   	}).then(() => {
   		fs.unlink(sanitizedTitle + '.mp4', () => {});
