@@ -11,10 +11,6 @@ function downloadMp3FromFile(file = 'links.txt'){
 	readFile(lineRead);
 }
 
-function finishedDownload(sanitizedTitle){
-	convertMp4ToMp3(sanitizedTitle);
-}
-
 function lineRead(url){
 	ytdl.getInfo(url)
 		.then(identifyName)
