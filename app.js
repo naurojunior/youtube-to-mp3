@@ -3,16 +3,12 @@ const ytdl = require('ytdl-core');
 const extractAudio = require('ffmpeg-extract-audio')
 const readline = require('readline');
 
-var filename = "links.txt";
+filename = process.argv[2];
 downloadMp3FromFile(filename);
 
 
 function downloadMp3FromFile(file = 'links.txt'){
-	readFile(lineRead);
-}
-
-function finishedDownload(sanitizedTitle){
-	convertMp4ToMp3(sanitizedTitle);
+	readFile(lineRead, file);
 }
 
 function lineRead(url){
@@ -42,9 +38,9 @@ function downloadVideo(infos){
 	});
 }
 
-function readFile(callback){
+function readFile(callback, file){
 	let lineReader = readline.createInterface({
-	  input: require('fs').createReadStream('links.txt')
+	  input: require('fs').createReadStream(file)
 	});
 
 	return new Promise( function(resolve , reject ){
