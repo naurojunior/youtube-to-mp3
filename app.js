@@ -3,6 +3,9 @@ const ytdl = require('ytdl-core');
 const extractAudio = require('ffmpeg-extract-audio')
 const readline = require('readline');
 
+filename = process.argv[2];
+filename = (process.argv[2]) ? process.argv[2] : "links.txt";
+
 var filename = "links.txt";
 downloadMp3FromFile(filename);
 
