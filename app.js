@@ -3,11 +3,30 @@ const ytdl = require('ytdl-core');
 const extractAudio = require('ffmpeg-extract-audio')
 const readline = require('readline');
 
-filename = process.argv[2];
-downloadMp3FromFile(filename);
+const args = parseArgs();
+downloadMp3FromFile(args.file);
 
+function parseArgs(){
+	let args = {'file' : 'links.txt', 'tempFolder': 'temp', 'downloadsFolder': 'downloads'};
 
-function downloadMp3FromFile(file = 'links.txt'){
+	process.argv.forEach(function (val, index, array) {
+		switch(val){
+			case '--file':
+				args.file = array[index+1];
+			break;
+			case '--temp-folder':
+				args.tempFolder = array[index+1];
+			break;
+			case '--downloads-folder':
+				args.downloadsFolder = array[index+1];
+			break;
+		}
+	});
+
+	return args;
+}
+
+function downloadMp3FromFile(file){
 	readFile(lineRead, file);
 }
 
@@ -31,7 +50,7 @@ function identifyName(infos){
 function downloadVideo(infos){
 	return new Promise( function(resolve , reject ){
 		var videoDownload = ytdl.downloadFromInfo(infos.youtubeInfos);
-		videoDownload.pipe(fs.createWriteStream('temp/' + infos.sanitizedTitle + ".mp4"));
+		videoDownload.pipe(fs.createWriteStream(args.tempFolder + "/" + infos.sanitizedTitle + ".mp4"));
 		videoDownload.on('end', ()=>{
 			resolve(infos)
 		});
@@ -52,9 +71,9 @@ function readFile(callback, file){
 
 function convertMp4ToMp3(infos){
 	return extractAudio({
-		  input: "temp/" + infos.sanitizedTitle + ".mp4",
-		  output: "downloads/" + infos.sanitizedTitle + ".mp3"
+		  input: args.tempFolder + "/" + infos.sanitizedTitle + ".mp4",
+		  output: args.downloadsFolder + "/" + infos.sanitizedTitle + ".mp3"
   	}).then(() => {
-  		fs.unlink("temp/" + infos.sanitizedTitle + '.mp4', () => {});
+  		fs.unlink(args.tempFolder + "/" + infos.sanitizedTitle + '.mp4', () => {});
   	});
 }
