@@ -7,7 +7,7 @@ const args = parseArgs();
 downloadMp3FromFile(args.file);
 
 function parseArgs(){
-	let args = {'file' : 'links.txt', 'tempFolder': 'temp', 'downloadsFolder': 'downloads'};
+	let args = {'file' : 'links.txt', 'tempFolder': 'temp', 'downloadsFolder': 'downloads', 'noDelete' : false};
 
 	process.argv.forEach(function (val, index, array) {
 		switch(val){
@@ -20,6 +20,10 @@ function parseArgs(){
 			case '--downloads-folder':
 				args.downloadsFolder = array[index+1];
 			break;
+			case '--no-delete':
+				args.noDelete = true;
+			break;
+
 		}
 	});
 
@@ -74,6 +78,8 @@ function convertMp4ToMp3(infos){
 		  input: args.tempFolder + "/" + infos.sanitizedTitle + ".mp4",
 		  output: args.downloadsFolder + "/" + infos.sanitizedTitle + ".mp3"
   	}).then(() => {
-  		fs.unlink(args.tempFolder + "/" + infos.sanitizedTitle + '.mp4', () => {});
+  		if(!args.noDelete){
+  			fs.unlink(args.tempFolder + "/" + infos.sanitizedTitle + '.mp4', () => {});
+  		}
   	});
 }
