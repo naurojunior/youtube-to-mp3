@@ -18,6 +18,6 @@
   "homepage": "https://github.com/naurojunior/youtube-to-mp3#readme",
   "dependencies": {
     "ffmpeg-extract-audio": "^1.0.2",
-    "ytdl-core": "^0.29.1"
+    "ytdl-core": "^2.0.0"
   }
 }
