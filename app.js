@@ -7,7 +7,7 @@ const args = parseArgs();
 downloadMp3FromFile(args.file);
 
 function parseArgs(){
-	let args = {'file' : 'links.txt', 'tempFolder': 'temp', 'downloadsFolder': 'downloads', 'noDelete' : false};
+	let args = {'file' : 'links.txt', 'tempFolder': 'temp', 'downloadsFolder': 'downloads', 'noDelete' : false, 'noConvert' : false};
 
 	process.argv.forEach(function (val, index, array) {
 		switch(val){
@@ -23,7 +23,8 @@ function parseArgs(){
 			case '--no-delete':
 				args.noDelete = true;
 			break;
-
+			case '--no-convert':
+				args.noConvert = true;
 		}
 	});
 
@@ -52,6 +53,7 @@ function identifyName(infos){
 }
 
 function downloadVideo(infos){
+  console.log('Baixando: ' + infos.sanitizedTitle);
 	return new Promise( function(resolve , reject ){
 		var videoDownload = ytdl.downloadFromInfo(infos.youtubeInfos);
 		videoDownload.pipe(fs.createWriteStream(args.tempFolder + "/" + infos.sanitizedTitle + ".mp4"));
@@ -74,10 +76,16 @@ function readFile(callback, file){
 }
 
 function convertMp4ToMp3(infos){
+	if(args.noConvert){
+		return;
+	}
+	
+  console.log('Convertendo: ' + infos.sanitizedTitle );
 	return extractAudio({
 		  input: args.tempFolder + "/" + infos.sanitizedTitle + ".mp4",
 		  output: args.downloadsFolder + "/" + infos.sanitizedTitle + ".mp3"
   	}).then(() => {
+  		console.log('Finalizado: ' + infos.sanitizedTitle );
   		if(!args.noDelete){
   			fs.unlink(args.tempFolder + "/" + infos.sanitizedTitle + '.mp4', () => {});
   		}
